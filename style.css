@@ -565,3 +565,11 @@ tr.next td:last-child {
   border-radius: 6px;
   transition: width 1s linear;
 }
+/* Коли йде перерва, смужка стає помаранчевою */
+.progress-fill.break-mode {
+  background: linear-gradient(
+    90deg,
+    var(--accent-orange),
+    var(--accent-orange-text)
+  );
+}
