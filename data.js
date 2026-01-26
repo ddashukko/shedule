@@ -20,7 +20,7 @@ window.scheduleData = {
         linkText: "Zoom",
       },
       {
-        time: "19.10-20.30",
+        time: "19.05-20.25",
         subject: "Урок з Поліною",
         type: "ind",
         typeLabel: "інд",
@@ -36,8 +36,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Красовська І. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://us04web.zoom.us/j/79134168970?pwd=1ADoKZbh222p9CZDzTBGWnosp4KoyJ.1",
+        linkText: "Zoom",
       },
       {
         time: "10.35-12.10",
@@ -338,7 +338,7 @@ window.scheduleData = {
         linkText: "Ще немає посилання",
       },
       {
-        time: "19.10-20.30",
+        time: "19.05-20.25",
         subject: "Урок з Поліною",
         type: "ind",
         typeLabel: "інд",
@@ -354,8 +354,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Красовська І. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://us04web.zoom.us/j/79134168970?pwd=1ADoKZbh222p9CZDzTBGWnosp4KoyJ.1",
+        linkText: "Zoom",
       },
       {
         time: "10.35-12.10",
