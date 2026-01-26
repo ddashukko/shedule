@@ -9,9 +9,21 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="preload" as="image" href="images/icons/sun.png" />
+    <link rel="preload" as="image" href="images/icons/moon.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round">
+          <img src="images/icons/sun.png" class="icon sun" alt="Sun" />
+          <img src="images/icons/moon.png" class="icon moon" alt="Moon" />
+        </div>
+      </label>
+    </div>
+
     <div class="container">
       <div class="week-status" id="weekStatus">Завантаження...</div>
 
@@ -25,6 +37,8 @@
       <div id="upper" class="tab-content"></div>
       <div id="lower" class="tab-content active"></div>
     </div>
+
+    <button class="find-me-btn" id="findMeBtn">📍 Де я?</button>
 
     <script src="data.js"></script>
     <script src="script.js"></script>

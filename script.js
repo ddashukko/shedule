@@ -1,17 +1,79 @@
 document.addEventListener("DOMContentLoaded", function () {
   const startDate = new Date(2026, 0, 26);
+  const themeCheckbox = document.getElementById("checkbox");
+  const findMeBtn = document.getElementById("findMeBtn");
 
-  // Використовуємо глобальну змінну window.scheduleData
+  // --- ЛОГІКА ТЕМИ (DARK MODE) ---
+
+  // Перевірка збереженої теми
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    themeCheckbox.checked = true;
+  }
+
+  themeCheckbox.addEventListener("change", function () {
+    if (this.checked) {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    }
+  });
+
+  // --- ОСНОВНА ЛОГІКА РОЗКЛАДУ ---
+
   if (window.scheduleData) {
     renderSchedule(window.scheduleData);
     initTabs();
-    updateSchedule();
-    setInterval(updateSchedule, 60000);
+    updateSchedule(true);
+    setInterval(() => updateSchedule(false), 60000);
   } else {
     console.error("Дані розкладу не знайдені! Перевірте файл data.js");
     document.getElementById("weekStatus").innerText =
       "Помилка завантаження даних";
   }
+
+  // --- КНОПКА "ДЕ Я ЗАРАЗ" ---
+  findMeBtn.addEventListener("click", () => {
+    updateSchedule(true);
+
+    const activeRow =
+      document.querySelector(".current") || document.querySelector(".next");
+
+    if (activeRow) {
+      activeRow.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      const dayMap = [
+        "Неділя",
+        "Понеділок",
+        "Вівторок",
+        "Середа",
+        "Четвер",
+        "П'ятниця",
+        "Субота",
+      ];
+      const now = new Date();
+      const todayName = dayMap[now.getDay()];
+
+      const headers = document.querySelectorAll("h2");
+      let todayHeader = null;
+
+      for (let h of headers) {
+        if (h.innerText.includes(todayName)) {
+          todayHeader = h;
+          break;
+        }
+      }
+
+      if (todayHeader) {
+        todayHeader.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  });
 
   function renderSchedule(data) {
     if (data.upper) renderWeek("upper", data.upper);
@@ -20,8 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function renderWeek(containerId, weekData) {
     const container = document.getElementById(containerId);
-    if (!container) return; // Захист від помилки
-
+    if (!container) return;
     container.innerHTML = "";
 
     for (const [dayName, lessons] of Object.entries(weekData)) {
@@ -79,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function updateSchedule() {
+  function updateSchedule(forceSwitchTab = false) {
     const now = new Date();
     const diffTime = now - startDate;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -89,18 +150,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusEl = document.getElementById("weekStatus");
     if (!statusEl) return;
 
-    let activeTabId = "lower";
+    let targetTabId = "lower";
 
     if (weeksPassed % 2 === 0) {
-      activeTabId = "upper";
+      targetTabId = "upper";
       statusEl.innerHTML = "Зараз активний: <span>Верхній тиждень</span>";
     } else {
-      activeTabId = "lower";
+      targetTabId = "lower";
       statusEl.innerHTML = "Зараз активний: <span>Нижній тиждень</span>";
     }
 
-    openTab(activeTabId);
-    highlightLessons(activeTabId, now);
+    if (forceSwitchTab) {
+      openTab(targetTabId);
+    }
+
+    highlightLessons(targetTabId, now);
   }
 
   function highlightLessons(tabId, now) {
@@ -116,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const currentDayIndex = now.getDay();
     const container = document.getElementById(tabId);
-    if (!container) return; // Захист
+    if (!container) return;
 
     const days = container.getElementsByClassName("day");
 

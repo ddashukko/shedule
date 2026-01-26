@@ -1,4 +1,5 @@
 :root {
+  /* Світла тема (за замовчуванням) */
   --bg-color: #f3f4f6;
   --card-bg: #ffffff;
   --text-primary: #111827;
@@ -14,8 +15,33 @@
   --accent-orange-text: #b45309;
   --border-color: #e5e7eb;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --highlight-shadow-green: 0 4px 12px rgba(16, 185, 129, 0.2);
-  --highlight-shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.2);
+  --btn-bg: #ffffff;
+  --btn-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  /* Кольори перемикача */
+  --switch-bg-day: #ffd700;
+  --switch-bg-night: #4d94ff;
+  --switch-circle: #ffffff;
+}
+
+/* Темна тема */
+[data-theme="dark"] {
+  --bg-color: #111827;
+  --card-bg: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --accent-blue: #60a5fa;
+  --accent-blue-light: rgba(59, 130, 246, 0.15);
+  --accent-blue-text: #93c5fd;
+  --accent-green: #34d399;
+  --accent-green-light: rgba(16, 185, 129, 0.15);
+  --accent-green-text: #6ee7b7;
+  --accent-orange: #fbbf24;
+  --accent-orange-light: rgba(245, 158, 11, 0.15);
+  --accent-orange-text: #fcd34d;
+  --border-color: #374151;
+  --btn-bg: #374151;
 }
 
 body {
@@ -25,16 +51,143 @@ body {
   margin: 0;
   padding: 15px;
   line-height: 1.5;
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
 }
 
 .container {
   max-width: 1000px;
   margin: 0 auto;
+  padding-bottom: 60px;
 }
 
+/* --- Стилі перемикача --- */
+.theme-switch-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.theme-switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider {
+  background-color: var(--switch-bg-day);
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+  border-radius: 34px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.slider:before {
+  background-color: var(--switch-circle);
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+/* Іконки всередині перемикача */
+.icon {
+  position: absolute;
+  top: 7px;
+  width: 20px;
+  height: 20px;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.sun {
+  left: 7px;
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.moon {
+  right: 7px;
+  opacity: 0;
+  transform: rotate(360deg);
+}
+
+/* Анімація при переключенні */
+input:checked + .slider {
+  background-color: var(--switch-bg-night);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:checked + .slider .sun {
+  opacity: 0;
+  transform: rotate(-360deg);
+}
+
+input:checked + .slider .moon {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* --- Стилі кнопки "Де я" --- */
+.find-me-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--accent-blue);
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--btn-shadow);
+  cursor: pointer;
+  z-index: 100;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.find-me-btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--accent-blue-text);
+}
+
+.find-me-btn:active {
+  transform: translateY(0);
+}
+
+/* --- Основні стилі --- */
 .week-status {
   text-align: center;
   margin-bottom: 15px;
+  margin-top: 10px;
   font-size: 0.9rem;
   color: var(--text-secondary);
   font-weight: 500;
@@ -49,12 +202,13 @@ body {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-  background: #e5e7eb;
+  background: var(--border-color);
   padding: 4px;
   border-radius: 12px;
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  transition: background-color 0.3s;
 }
 
 .tab-btn {
@@ -67,7 +221,9 @@ body {
   font-size: 1rem;
   color: var(--text-secondary);
   border-radius: 8px;
-  transition: background 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   min-width: 100px;
 }
 
@@ -92,11 +248,13 @@ body {
   margin-bottom: 20px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
-  transition: opacity 0.3s ease;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
 }
 
 .day.day-passed {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 h2 {
@@ -133,6 +291,7 @@ th {
   color: var(--text-secondary);
   font-weight: 600;
   border-bottom: 2px solid var(--border-color);
+  transition: border-color 0.3s;
 }
 
 td {
@@ -140,6 +299,7 @@ td {
   vertical-align: middle;
   border-bottom: 1px solid var(--border-color);
   font-size: 0.95rem;
+  transition: border-color 0.3s;
 }
 
 tr {
@@ -158,24 +318,21 @@ tr.passed {
 
 tr.current {
   background-color: var(--accent-green-light);
-  box-shadow: var(--highlight-shadow-green);
+  border: 1px solid var(--accent-green);
   position: relative;
   z-index: 10;
   transform: scale(1.01);
   border-radius: 8px;
 }
-
 tr.current td {
   border-top: 2px solid var(--accent-green);
   border-bottom: 2px solid var(--accent-green);
 }
-
 tr.current td:first-child {
   border-left: 2px solid var(--accent-green);
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
-
 tr.current td:last-child {
   border-right: 2px solid var(--accent-green);
   border-top-right-radius: 8px;
@@ -183,25 +340,22 @@ tr.current td:last-child {
 }
 
 tr.next {
-  background-color: #ffffff;
-  box-shadow: var(--highlight-shadow-blue);
+  background-color: var(--card-bg);
   position: relative;
   z-index: 9;
   transform: scale(1.01);
   border-radius: 8px;
+  transition: background-color 0.3s;
 }
-
 tr.next td {
   border-top: 2px solid var(--accent-blue);
   border-bottom: 2px solid var(--accent-blue);
 }
-
 tr.next td:first-child {
   border-left: 2px solid var(--accent-blue);
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
-
 tr.next td:last-child {
   border-right: 2px solid var(--accent-blue);
   border-top-right-radius: 8px;
@@ -239,11 +393,14 @@ tr.next td:last-child {
   justify-content: center;
   padding: 6px 14px;
   background-color: var(--text-primary);
-  color: white;
+  color: var(--card-bg);
   text-decoration: none;
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .time-cell {
@@ -281,22 +438,23 @@ tr.next td:last-child {
   }
 
   tr {
-    background: #fff;
+    background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     margin-bottom: 15px;
     padding: 15px;
     position: relative;
+    transition:
+      background-color 0.3s,
+      border-color 0.3s;
   }
 
   tr.lek {
     border-left: 5px solid var(--accent-blue);
   }
-
   tr.pr {
     border-left: 5px solid var(--accent-green);
   }
-
   tr.ind {
     border-left: 5px solid var(--accent-orange);
   }
@@ -305,7 +463,6 @@ tr.next td:last-child {
     border: 2px solid var(--accent-green);
     transform: scale(1.02);
   }
-
   tr.current td {
     border: none;
   }
@@ -314,7 +471,6 @@ tr.next td:last-child {
     border: 2px solid var(--accent-blue);
     transform: scale(1.02);
   }
-
   tr.next td {
     border: none;
   }
