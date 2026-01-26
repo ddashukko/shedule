@@ -1,70 +1,208 @@
-let scheduleData = null;
-const container = document.getElementById("schedule-container");
-const btnUpper = document.getElementById("btn-upper");
-const btnLower = document.getElementById("btn-lower");
+document.addEventListener("DOMContentLoaded", function () {
+  const startDate = new Date(2026, 0, 26);
 
-fetch("data.json")
-  .then((response) => response.json())
-  .then((data) => {
-    scheduleData = data;
-    renderSchedule(data.upper);
-  })
-  .catch((error) => console.error(error));
-
-btnUpper.addEventListener("click", () => {
-  if (scheduleData) {
-    renderSchedule(scheduleData.upper);
-    btnUpper.classList.add("active");
-    btnLower.classList.remove("active");
+  // Використовуємо глобальну змінну window.scheduleData
+  if (window.scheduleData) {
+    renderSchedule(window.scheduleData);
+    initTabs();
+    updateSchedule();
+    setInterval(updateSchedule, 60000);
+  } else {
+    console.error("Дані розкладу не знайдені! Перевірте файл data.js");
+    document.getElementById("weekStatus").innerText =
+      "Помилка завантаження даних";
   }
-});
 
-btnLower.addEventListener("click", () => {
-  if (scheduleData) {
-    renderSchedule(scheduleData.lower);
-    btnLower.classList.add("active");
-    btnUpper.classList.remove("active");
+  function renderSchedule(data) {
+    if (data.upper) renderWeek("upper", data.upper);
+    if (data.lower) renderWeek("lower", data.lower);
   }
-});
 
-function renderSchedule(weekData) {
-  container.innerHTML = "";
+  function renderWeek(containerId, weekData) {
+    const container = document.getElementById(containerId);
+    if (!container) return; // Захист від помилки
 
-  weekData.forEach((dayItem) => {
-    if (!dayItem.lessons) return;
+    container.innerHTML = "";
 
-    const dayCard = document.createElement("div");
-    dayCard.classList.add("day-card");
+    for (const [dayName, lessons] of Object.entries(weekData)) {
+      const dayDiv = document.createElement("div");
+      dayDiv.className = "day";
 
-    const dayTitle = document.createElement("h3");
-    dayTitle.textContent = dayItem.day;
-    dayCard.appendChild(dayTitle);
+      const title = document.createElement("h2");
+      title.innerText = dayName;
+      dayDiv.appendChild(title);
 
-    const lessonsList = document.createElement("ul");
-    lessonsList.classList.add("lessons-list");
+      const table = document.createElement("table");
+      table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Час</th>
+                        <th>Предмет</th>
+                        <th>Тип</th>
+                        <th>Викладач</th>
+                        <th>Лінк</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+      const tbody = table.querySelector("tbody");
 
-    dayItem.lessons.forEach((lesson) => {
-      const lessonItem = document.createElement("li");
-      lessonItem.classList.add("lesson-item");
+      lessons.forEach((lesson) => {
+        const tr = document.createElement("tr");
+        tr.className = lesson.type;
 
-      let linkHtml = "";
-      if (lesson.link) {
-        linkHtml = `<a href="${lesson.link}" target="_blank" class="join-btn">Підключитися</a>`;
+        tr.innerHTML = `
+                    <td class="time-cell" data-label="Час">${lesson.time}</td>
+                    <td class="subject-cell" data-label="Предмет">${lesson.subject}</td>
+                    <td data-label="Тип"><span class="badge">${lesson.typeLabel}</span></td>
+                    <td class="teacher-cell" data-label="Викладач">${lesson.teacher}</td>
+                    <td data-label="Лінк">
+                        <a href="${lesson.link}" target="_blank" class="btn-link">
+                            ${lesson.linkText}
+                        </a>
+                    </td>
+                `;
+        tbody.appendChild(tr);
+      });
+
+      dayDiv.appendChild(table);
+      container.appendChild(dayDiv);
+    }
+  }
+
+  function initTabs() {
+    const tabBtns = document.getElementsByClassName("tab-btn");
+    Array.from(tabBtns).forEach((btn) => {
+      btn.addEventListener("click", function () {
+        openTab(this.dataset.tab);
+      });
+    });
+  }
+
+  function updateSchedule() {
+    const now = new Date();
+    const diffTime = now - startDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const adjustedDays = diffDays < 0 ? 0 : diffDays;
+    const weeksPassed = Math.floor(adjustedDays / 7);
+
+    const statusEl = document.getElementById("weekStatus");
+    if (!statusEl) return;
+
+    let activeTabId = "lower";
+
+    if (weeksPassed % 2 === 0) {
+      activeTabId = "upper";
+      statusEl.innerHTML = "Зараз активний: <span>Верхній тиждень</span>";
+    } else {
+      activeTabId = "lower";
+      statusEl.innerHTML = "Зараз активний: <span>Нижній тиждень</span>";
+    }
+
+    openTab(activeTabId);
+    highlightLessons(activeTabId, now);
+  }
+
+  function highlightLessons(tabId, now) {
+    const dayMap = {
+      Понеділок: 1,
+      Вівторок: 2,
+      Середа: 3,
+      Четвер: 4,
+      "П'ятниця": 5,
+      Субота: 6,
+      Неділя: 0,
+    };
+
+    const currentDayIndex = now.getDay();
+    const container = document.getElementById(tabId);
+    if (!container) return; // Захист
+
+    const days = container.getElementsByClassName("day");
+
+    let nextFound = false;
+
+    for (let day of days) {
+      const title = day.querySelector("h2").innerText.trim();
+      const dayIndex = dayMap[title];
+
+      day.classList.remove("day-passed");
+
+      if (dayIndex < currentDayIndex && dayIndex !== 0) {
+        day.classList.add("day-passed");
+        const rows = day.querySelectorAll("tbody tr");
+        rows.forEach((row) => {
+          row.classList.add("passed");
+          row.classList.remove("current", "next");
+        });
+        continue;
       }
 
-      lessonItem.innerHTML = `
-                <div class="lesson-time">${lesson.time}</div>
-                <div class="lesson-info">
-                    <span class="lesson-subject">${lesson.subject} <span class="lesson-type">(${lesson.type})</span></span>
-                    <div class="lesson-teacher">${lesson.teacher}</div>
-                </div>
-                ${linkHtml}
-            `;
+      if (dayIndex > currentDayIndex) {
+        const rows = day.querySelectorAll("tbody tr");
+        rows.forEach((row) => {
+          row.classList.remove("passed", "current", "next");
+          if (!nextFound) {
+            row.classList.add("next");
+            nextFound = true;
+          }
+        });
+        continue;
+      }
 
-      lessonsList.appendChild(lessonItem);
-    });
+      if (dayIndex === currentDayIndex) {
+        const rows = day.querySelectorAll("tbody tr");
 
-    dayCard.appendChild(lessonsList);
-    container.appendChild(dayCard);
-  });
-}
+        rows.forEach((row) => {
+          row.classList.remove("passed", "current", "next");
+
+          const timeCell = row.querySelector(".time-cell");
+          if (!timeCell) return;
+
+          const timeText = timeCell.innerText.trim();
+          const [startStr, endStr] = timeText.split("-");
+
+          const startTime = parseTime(startStr, now);
+          const endTime = parseTime(endStr, now);
+
+          if (now > endTime) {
+            row.classList.add("passed");
+          } else if (now >= startTime && now <= endTime) {
+            row.classList.add("current");
+            nextFound = true;
+          } else {
+            if (!nextFound) {
+              row.classList.add("next");
+              nextFound = true;
+            }
+          }
+        });
+      }
+    }
+  }
+
+  function parseTime(timeStr, dateRef) {
+    const [hours, minutes] = timeStr.trim().split(".").map(Number);
+    const newDate = new Date(dateRef);
+    newDate.setHours(hours, minutes, 0, 0);
+    return newDate;
+  }
+
+  function openTab(tabName) {
+    const tabContent = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContent.length; i++) {
+      tabContent[i].classList.remove("active");
+    }
+
+    const tabBtns = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabBtns.length; i++) {
+      tabBtns[i].classList.remove("active");
+    }
+
+    const content = document.getElementById(tabName);
+    if (content) content.classList.add("active");
+
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+    if (btn) btn.classList.add("active");
+  }
+});

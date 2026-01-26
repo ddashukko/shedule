@@ -1,130 +1,367 @@
+:root {
+  --bg-color: #f3f4f6;
+  --card-bg: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --accent-blue: #3b82f6;
+  --accent-blue-light: #eff6ff;
+  --accent-blue-text: #1d4ed8;
+  --accent-green: #10b981;
+  --accent-green-light: #ecfdf5;
+  --accent-green-text: #047857;
+  --accent-orange: #f59e0b;
+  --accent-orange-light: #fffbeb;
+  --accent-orange-text: #b45309;
+  --border-color: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --highlight-shadow-green: 0 4px 12px rgba(16, 185, 129, 0.2);
+  --highlight-shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
 body {
-  font-family: sans-serif;
-  background-color: #f4f4f9;
-  padding: 20px;
-  max-width: 800px;
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 15px;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-.controls {
+.week-status {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #ddd;
-  border: none;
-  border-radius: 5px;
-  margin: 0 5px;
+.week-status span {
+  color: var(--accent-blue);
+  font-weight: 700;
 }
 
-button:hover {
-  background-color: #ccc;
-}
-
-button.active {
-  background-color: #007bff;
-  color: white;
-}
-
-.day-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.day-card h3 {
-  margin-top: 0;
-  color: #333;
-  border-bottom: 2px solid #007bff;
-  padding-bottom: 10px;
-}
-
-.lessons-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.lesson-item {
+.tabs-nav {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  justify-content: center;
+  margin-bottom: 20px;
+  background: #e5e7eb;
+  padding: 4px;
+  border-radius: 12px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.lesson-item:last-child {
-  border-bottom: none;
-}
-
-.lesson-time {
-  font-weight: bold;
-  min-width: 110px;
-  color: #444;
-}
-
-.lesson-info {
-  flex-grow: 1;
-  padding: 0 15px;
-}
-
-.lesson-subject {
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
-  font-size: 1.1em;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  transition: background 0.2s;
+  min-width: 100px;
+}
+
+.tab-btn.active {
+  background-color: var(--card-bg);
+  color: var(--accent-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
   display: block;
 }
 
-.lesson-type {
-  font-weight: normal;
-  color: #666;
-  font-size: 0.85em;
-  margin-left: 5px;
+.day {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: opacity 0.3s ease;
 }
 
-.lesson-teacher {
-  font-size: 0.9em;
-  color: #555;
-  margin-top: 3px;
+.day.day-passed {
+  opacity: 0.5;
 }
 
-.join-btn {
-  background-color: #007bff;
+h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 24px;
+  background: var(--accent-blue);
+  border-radius: 3px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+}
+
+td {
+  padding: 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.95rem;
+}
+
+tr {
+  transition: all 0.3s ease;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr.passed {
+  opacity: 0.4;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+tr.current {
+  background-color: var(--accent-green-light);
+  box-shadow: var(--highlight-shadow-green);
+  position: relative;
+  z-index: 10;
+  transform: scale(1.01);
+  border-radius: 8px;
+}
+
+tr.current td {
+  border-top: 2px solid var(--accent-green);
+  border-bottom: 2px solid var(--accent-green);
+}
+
+tr.current td:first-child {
+  border-left: 2px solid var(--accent-green);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+tr.current td:last-child {
+  border-right: 2px solid var(--accent-green);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+tr.next {
+  background-color: #ffffff;
+  box-shadow: var(--highlight-shadow-blue);
+  position: relative;
+  z-index: 9;
+  transform: scale(1.01);
+  border-radius: 8px;
+}
+
+tr.next td {
+  border-top: 2px solid var(--accent-blue);
+  border-bottom: 2px solid var(--accent-blue);
+}
+
+tr.next td:first-child {
+  border-left: 2px solid var(--accent-blue);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+tr.next td:last-child {
+  border-right: 2px solid var(--accent-blue);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.lek .badge {
+  background-color: var(--accent-blue-light);
+  color: var(--accent-blue-text);
+}
+
+.pr .badge {
+  background-color: var(--accent-green-light);
+  color: var(--accent-green-text);
+}
+
+.ind .badge {
+  background-color: var(--accent-orange-light);
+  color: var(--accent-orange-text);
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  background-color: var(--text-primary);
   color: white;
-  padding: 8px 15px;
   text-decoration: none;
-  border-radius: 5px;
-  font-size: 0.9em;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.time-cell {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
   white-space: nowrap;
+  font-weight: 500;
 }
 
-.join-btn:hover {
-  background-color: #0056b3;
+.subject-cell {
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
-@media (max-width: 600px) {
-  .lesson-item {
+.teacher-cell {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .day {
+    padding: 15px;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead tr {
+    display: none;
+  }
+
+  tr {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    padding: 15px;
+    position: relative;
+  }
+
+  tr.lek {
+    border-left: 5px solid var(--accent-blue);
+  }
+
+  tr.pr {
+    border-left: 5px solid var(--accent-green);
+  }
+
+  tr.ind {
+    border-left: 5px solid var(--accent-orange);
+  }
+
+  tr.current {
+    border: 2px solid var(--accent-green);
+    transform: scale(1.02);
+  }
+
+  tr.current td {
+    border: none;
+  }
+
+  tr.next {
+    border: 2px solid var(--accent-blue);
+    transform: scale(1.02);
+  }
+
+  tr.next td {
+    border: none;
+  }
+
+  td {
+    border: none;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+  }
+
+  td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-right: 15px;
+  }
+
+  td[data-label="Тип"] {
+    display: none;
+  }
+
+  .badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+
+  .btn-link {
+    width: auto;
+    margin-top: 0;
+  }
+
+  .subject-cell {
+    text-align: left;
+    width: 100%;
+    display: block;
+    margin-top: 4px;
+  }
+
+  td[data-label="Предмет"] {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .join-btn {
-    margin-top: 10px;
-    align-self: flex-start;
-  }
-
-  .lesson-time {
-    margin-bottom: 5px;
-  }
-
-  .lesson-info {
-    padding: 0;
-    margin-bottom: 5px;
+    text-align: left;
   }
 }

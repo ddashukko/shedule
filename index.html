@@ -3,17 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Розклад занять</title>
+    <title>Мій Розклад</title>
+    <link rel="icon" type="image/svg+xml" href="images/icons/kitty.jpg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="controls">
-      <button id="btn-upper" class="active">Верхній тиждень</button>
-      <button id="btn-lower">Нижній тиждень</button>
+    <div class="container">
+      <div class="week-status" id="weekStatus">Завантаження...</div>
+
+      <div class="tabs-nav">
+        <button class="tab-btn" id="btn-upper" data-tab="upper">Верхній</button>
+        <button class="tab-btn active" id="btn-lower" data-tab="lower">
+          Нижній
+        </button>
+      </div>
+
+      <div id="upper" class="tab-content"></div>
+      <div id="lower" class="tab-content active"></div>
     </div>
 
-    <div id="schedule-container"></div>
-
+    <script src="data.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
