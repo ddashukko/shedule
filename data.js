@@ -45,8 +45,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Закала П.А.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://meet.google.com/uxn-jbwq-nhn",
+        linkText: "Meet",
       },
       {
         time: "16.00-16.50",
@@ -363,8 +363,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Закала П.А.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://meet.google.com/uxn-jbwq-nhn",
+        linkText: "Meet",
       },
       {
         time: "12.20-13.55",
