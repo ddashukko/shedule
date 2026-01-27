@@ -249,8 +249,8 @@ window.scheduleData = {
         type: "lek",
         typeLabel: "Лекція",
         teacher: "Заворотинський А. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://knu-ua.zoom.us/j/87660949816?pwd=1ac3aZPOVHGQTsTrAeCkXbL34jwrGC.1",
+        linkText: "Zoom",
       },
       {
         time: "10.35-12.10",
@@ -267,8 +267,8 @@ window.scheduleData = {
         type: "lek",
         typeLabel: "Лекція",
         teacher: "Заворотинський А. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://knu-ua.zoom.us/j/87660949816?pwd=1ac3aZPOVHGQTsTrAeCkXbL34jwrGC.1",
+        linkText: "Zoom",
       },
       {
         time: "15.00-15.50",
@@ -576,8 +576,8 @@ window.scheduleData = {
         type: "lek",
         typeLabel: "Лекція",
         teacher: "Заворотинський А. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://knu-ua.zoom.us/j/87660949816?pwd=1ac3aZPOVHGQTsTrAeCkXbL34jwrGC.1",
+        linkText: "Zoom",
       },
       {
         time: "10.35-12.10",
@@ -594,8 +594,8 @@ window.scheduleData = {
         type: "lek",
         typeLabel: "Лекція",
         teacher: "Заворотинський А. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "https://knu-ua.zoom.us/j/87660949816?pwd=1ac3aZPOVHGQTsTrAeCkXbL34jwrGC.1",
+        linkText: "Zoom",
       },
       {
         time: "15.00-15.50",
