@@ -3,1738 +3,430 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Мій Розклад</title>
-    <link rel="icon" type="image/svg+xml" href="images/icons/kitty.jpg" />
+    <title>Геометрія 8 клас: Прямокутний трикутник</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <style>
-  :root {
-    --bg-color: #f3f4f6;
-    --card-bg: #ffffff;
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --accent-blue: #3b82f6;
-    --accent-blue-light: #eff6ff;
-    --accent-blue-text: #1d4ed8;
-    --accent-green: #10b981;
-    --accent-green-light: #ecfdf5;
-    --accent-green-text: #047857;
-    --accent-orange: #f59e0b;
-    --accent-orange-light: #fffbeb;
-    --accent-orange-text: #b45309;
-    --border-color: #e5e7eb;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --highlight-shadow-green: 0 4px 12px rgba(16, 185, 129, 0.2);
-    --highlight-shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.2);
-  }
+      :root {
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --text-color: #333;
+        --accent-blue: #4a90e2;
+        --accent-yellow: #f1c40f;
+        --accent-green: #2ecc71;
+        --accent-purple: #9b59b6;
+        --border-radius: 16px;
+        --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        --heading-font: "Fredoka", sans-serif;
+        --body-font: "Nunito", sans-serif;
+      }
 
-  body {
-    font-family: "Inter", sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-primary);
-    margin: 0;
-    padding: 15px;
-    line-height: 1.5;
-  }
+      body {
+        font-family: var(--body-font);
+        background-color: var(--bg-color);
+        background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
+        background-size: 20px 20px;
+        color: var(--text-color);
+        margin: 0;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
+      h1.main-title {
+        font-family: var(--heading-font);
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 2.8em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h1.main-title span {
+        color: var(--accent-blue);
+      }
 
-  .week-status {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
+      .sheet-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+        width: 100%;
+        max-width: 1200px;
+      }
 
-  .week-status span {
-    color: var(--accent-blue);
-    font-weight: 700;
-  }
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--card-shadow);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        border-top: 5px solid transparent;
+      }
 
-  .tabs-nav {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    background: #e5e7eb;
-    padding: 4px;
-    border-radius: 12px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-  }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      }
 
-  .tab-btn {
-    padding: 10px 20px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--text-secondary);
-    border-radius: 8px;
-    transition: background 0.2s;
-    min-width: 100px;
-  }
+      .card.blue-theme {
+        border-color: var(--accent-blue);
+      }
+      .card.yellow-theme {
+        border-color: var(--accent-yellow);
+      }
+      .card.green-theme {
+        border-color: var(--accent-green);
+      }
+      .card.purple-theme {
+        border-color: var(--accent-purple);
+      }
 
-  .tab-btn.active {
-    background-color: var(--card-bg);
-    color: var(--accent-blue);
-    box-shadow: var(--shadow-sm);
-  }
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
 
-  .tab-content {
-    display: none;
-  }
+      .card-icon {
+        font-size: 28px;
+        margin-right: 15px;
+      }
 
-  .tab-content.active {
-    display: block;
-  }
+      h2 {
+        margin: 0;
+        font-family: var(--heading-font);
+        font-size: 22px;
+        color: #2c3e50;
+      }
+      .blue-theme h2 {
+        color: var(--accent-blue);
+      }
+      .yellow-theme h2 {
+        color: #c29d0b;
+      }
+      .green-theme h2 {
+        color: var(--accent-green);
+      }
+      .purple-theme h2 {
+        color: var(--accent-purple);
+      }
 
-  .day {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-color);
-    transition: opacity 0.3s ease;
-  }
+      .content {
+        font-size: 16px;
+        line-height: 1.6;
+      }
 
-  .day.day-passed {
-    opacity: 0.5;
-  }
+      .content ul {
+        list-style: none;
+        padding-left: 10px;
+      }
+      .content li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 20px;
+      }
+      .content li::before {
+        content: "•";
+        color: var(--accent-blue);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+      }
 
-  h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.25rem;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+      .formula-box {
+        background: #fff;
+        border: 2px solid var(--accent-yellow);
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2em;
+        background-image: linear-gradient(to bottom right, #fff9c4, #fff);
+        box-shadow: inset 0 0 10px rgba(241, 196, 15, 0.2);
+      }
 
-  h2::before {
-    content: "";
-    display: block;
-    width: 6px;
-    height: 24px;
-    background: var(--accent-blue);
-    border-radius: 3px;
-  }
+      .sub-heading {
+        font-weight: 700;
+        color: #555;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        display: block;
+      }
 
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
+      hr {
+        border: none;
+        border-top: 2px dashed #eee;
+        margin: 20px 0;
+      }
 
-  th {
-    text-align: left;
-    padding: 12px 16px;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    font-weight: 600;
-    border-bottom: 2px solid var(--border-color);
-  }
+      .step-list p {
+        margin-bottom: 12px;
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        border-left: 3px solid var(--accent-purple);
+      }
+      .step-list strong {
+        color: var(--accent-purple);
+      }
 
-  td {
-    padding: 16px;
-    vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
-  }
+      .triangle-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .triangle-svg {
+        width: 100%;
+        height: auto;
+        max-height: 220px;
+        filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.1));
+        overflow: visible;
+      }
 
-  tr {
-    transition: all 0.3s ease;
-  }
+      text {
+        font-family: var(--heading-font);
+        font-size: 15px;
+        font-weight: 600;
+        user-select: none;
+      }
 
-  tr:last-child td {
-    border-bottom: none;
-  }
-
-  tr.passed {
-    opacity: 0.4;
-    filter: grayscale(100%);
-    pointer-events: none;
-  }
-
-  tr.current {
-    background-color: var(--accent-green-light);
-    box-shadow: var(--highlight-shadow-green);
-    position: relative;
-    z-index: 10;
-    transform: scale(1.01);
-    border-radius: 8px;
-  }
-
-  tr.current td {
-    border-top: 2px solid var(--accent-green);
-    border-bottom: 2px solid var(--accent-green);
-  }
-  
-  tr.current td:first-child {
-    border-left: 2px solid var(--accent-green);
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
-  
-  tr.current td:last-child {
-    border-right: 2px solid var(--accent-green);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-
-  tr.next {
-    background-color: #ffffff;
-    box-shadow: var(--highlight-shadow-blue);
-    position: relative;
-    z-index: 9;
-    transform: scale(1.01);
-    border-radius: 8px;
-  }
-
-  tr.next td {
-    border-top: 2px solid var(--accent-blue);
-    border-bottom: 2px solid var(--accent-blue);
-  }
-
-  tr.next td:first-child {
-    border-left: 2px solid var(--accent-blue);
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
-
-  tr.next td:last-child {
-    border-right: 2px solid var(--accent-blue);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .lek .badge {
-    background-color: var(--accent-blue-light);
-    color: var(--accent-blue-text);
-  }
-
-  .pr .badge {
-    background-color: var(--accent-green-light);
-    color: var(--accent-green-text);
-  }
-
-  .ind .badge {
-    background-color: var(--accent-orange-light);
-    color: var(--accent-orange-text);
-  }
-
-  .btn-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 14px;
-    background-color: var(--text-primary);
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .time-cell {
-    font-variant-numeric: tabular-nums;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    font-weight: 500;
-  }
-
-  .subject-cell {
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .teacher-cell {
-    color: var(--text-secondary);
-  }
-
-  @media (max-width: 768px) {
-    .day {
-      padding: 15px;
-    }
-
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-      display: block;
-    }
-
-    thead tr {
-      display: none;
-    }
-
-    tr {
-      background: #fff;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      margin-bottom: 15px;
-      padding: 15px;
-      position: relative;
-    }
-
-    tr.lek {
-      border-left: 5px solid var(--accent-blue);
-    }
-
-    tr.pr {
-      border-left: 5px solid var(--accent-green);
-    }
-
-    tr.ind {
-      border-left: 5px solid var(--accent-orange);
-    }
-
-    tr.current {
-      border: 2px solid var(--accent-green);
-      transform: scale(1.02);
-    }
-    
-    tr.current td {
-      border: none;
-    }
-
-    tr.next {
-      border: 2px solid var(--accent-blue);
-      transform: scale(1.02);
-    }
-
-    tr.next td {
-      border: none;
-    }
-
-    td {
-      border: none;
-      padding: 6px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: right;
-    }
-
-    td::before {
-      content: attr(data-label);
-      float: left;
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      margin-right: 15px;
-    }
-
-    td[data-label="Тип"] {
-      display: none;
-    }
-
-    .badge {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-    }
-
-    .btn-link {
-      width: auto;
-      margin-top: 0;
-    }
-
-    .subject-cell {
-      text-align: left;
-      width: 100%;
-      display: block;
-      margin-top: 4px;
-    }
-
-    td[data-label="Предмет"] {
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-    }
-  }
-</style>
+      @media (max-width: 768px) {
+        body {
+          padding: 15px;
+        }
+        h1.main-title {
+          font-size: 2em;
+        }
+        .sheet-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
-      <div class="week-status" id="weekStatus">Завантаження...</div>
+    <h1 class="main-title">📐 Геометрія: <span>Прямокутний Трикутник</span></h1>
 
-      <div class="tabs-nav">
-        <button class="tab-btn" id="btn-upper" onclick="openTab('upper')">
-          Верхній
-        </button>
-        <button
-          class="tab-btn active"
-          id="btn-lower"
-          onclick="openTab('lower')"
-        >
-          Нижній
-        </button>
-      </div>
-
-      <div id="upper" class="tab-content">
-        <div class="day">
-          <h2>Понеділок</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Інструментальні середовища та технології
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Тієвський І.О.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Тарануха В.Ю.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us05web.zoom.us/j/7221055227?pwd=MTdmWG9oNDA0TXd0TGU2dFVSWXN0UT09"
-                    target="_blank"
-                    class="btn-link"
-                  >
-                    Zoom
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.10-20.30</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Поліною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/78261077907?pwd=1EyaRpoLRXmLB9TY14c03Ipec0JqoS.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="sheet-grid">
+      <div class="card blue-theme">
+        <div class="card-header">
+          <span class="card-icon">🎨</span>
+          <h2>1. Малюнок та Позначення</h2>
         </div>
+        <div class="content">
+          <div class="triangle-container">
+            <svg class="triangle-svg" viewBox="0 0 320 180">
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop
+                    offset="0%"
+                    style="stop-color: rgb(74, 144, 226); stop-opacity: 0.2"
+                  />
+                  <stop
+                    offset="100%"
+                    style="stop-color: rgb(46, 204, 113); stop-opacity: 0.2"
+                  />
+                </linearGradient>
+              </defs>
 
-        <div class="day">
-          <h2>Вівторок</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">Іноземна мова</td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Красовська І. В.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Алгоритми та структури даних
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">Закала П.А.</td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">16.00-16.50</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Іванною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/74561284373?pwd=btqSbLB8LRR9qsgvswiFSS7pXicWnp.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">17.00-17.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Вікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.00-19.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Ілльой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/79950004155?pwd=FgHHeKdpJHgWqbDB7tZmDpaV3kgVab.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">20.00-20.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Алісой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">21.00-21.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Славой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <polygon
+                points="50,150 255,150 130,50"
+                fill="url(#grad1)"
+                stroke="#2c3e50"
+                stroke-width="3"
+                stroke-linejoin="round"
+              />
 
-        <div class="day">
-          <h2>Середа</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Дослідження операцій
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Кондратенко О.О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="http://meet.google.com/stp-rrmy-uni"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Теорія алгоритмів
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">Зубенко В.В.</td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Мова Python для візуалізації
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Карнаух Т. О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://meet.google.com/ydt-adiv-yha"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">14.05-15.40</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Завадський І. О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://knu-ua.zoom.us/j/89311264406?pwd=GyiSgmIhoP5gNg6rDkyw6xqn2uiUb7.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">16.00-16.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Євою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">18.00-18.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Нікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">20.00-20.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Марією</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <line
+                x1="130"
+                y1="50"
+                x2="130"
+                y2="150"
+                stroke="#e74c3c"
+                stroke-width="3"
+                stroke-dasharray="6,4"
+                stroke-linecap="round"
+              />
 
-        <div class="day">
-          <h2>Четвер</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Інструментальні середовища та технології
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Омельчук Л. Л.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://meet.google.com/xro-rpnw-pff"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Математична статистика
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">Розора І. В.</td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://meet.google.com/fys-kfeu-unr"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Завадський І. О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://knu-ua.zoom.us/j/89311264406?pwd=GyiSgmIhoP5gNg6rDkyw6xqn2uiUb7.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">14.05-15.40</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Теорія алгоритмів
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Шкільняк С. С.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/77713518929?pwd=K01sMDZxTXpQSEJPYk1ZeHFkOEVpdz09"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">16.00-16.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Євою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">17.00-17.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Вікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">18.00-18.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Златою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/72715914681?pwd=QweeSKv99Tv5ebFwwAeDLO3xUBB9up.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.00-19.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Ілльой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/79950004155?pwd=FgHHeKdpJHgWqbDB7tZmDpaV3kgVab.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">20.00-20.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Алісой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <polyline
+                points="118,60 128,68 140,58"
+                fill="none"
+                stroke="#2c3e50"
+                stroke-width="2"
+              />
 
-        <div class="day">
-          <h2>П'ятниця</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Дослідження операцій
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Заворотинський А. В.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Теорія алгоритмів
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Шкільняк С. С.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/77713518929?pwd=K01sMDZxTXpQSEJPYk1ZeHFkOEVpdz09"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Завадський І. О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://knu-ua.zoom.us/j/89311264406?pwd=GyiSgmIhoP5gNg6rDkyw6xqn2uiUb7.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">15.00-15.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Златою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/72715914681?pwd=QweeSKv99Tv5ebFwwAeDLO3xUBB9up.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">17.00-17.50</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Іванною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/74561284373?pwd=btqSbLB8LRR9qsgvswiFSS7pXicWnp.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">18.00-18.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Нікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.00-20.20</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Поліною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/78261077907?pwd=1EyaRpoLRXmLB9TY14c03Ipec0JqoS.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              <rect
+                x="122"
+                y="142"
+                width="8"
+                height="8"
+                fill="#e74c3c"
+                opacity="0.5"
+              />
+
+              <text
+                x="130"
+                y="35"
+                fill="#2c3e50"
+                text-anchor="middle"
+                font-size="16"
+              >
+                C (90°)
+              </text>
+              <text
+                x="40"
+                y="165"
+                fill="#2c3e50"
+                text-anchor="end"
+                font-size="16"
+              >
+                A
+              </text>
+              <text
+                x="265"
+                y="165"
+                fill="#2c3e50"
+                text-anchor="start"
+                font-size="16"
+              >
+                B
+              </text>
+              <text
+                x="130"
+                y="170"
+                fill="#e74c3c"
+                text-anchor="middle"
+                font-weight="bold"
+              >
+                D
+              </text>
+
+              <text x="80" y="95" fill="#4a90e2" text-anchor="end">b</text>
+              <text x="205" y="95" fill="#2ecc71" text-anchor="start">a</text>
+              <text x="140" y="110" fill="#e74c3c" text-anchor="start">h</text>
+
+              <text
+                x="90"
+                y="140"
+                font-size="12"
+                fill="#555"
+                text-anchor="middle"
+                font-style="italic"
+              >
+                AD (пр b)
+              </text>
+
+              <text
+                x="192"
+                y="140"
+                font-size="12"
+                fill="#555"
+                text-anchor="middle"
+                font-style="italic"
+              >
+                BD (пр a)
+              </text>
+            </svg>
+          </div>
+          <ul>
+            <li>\( AB = c \) — гіпотенуза (найдовша)</li>
+            <li>\( AC = b, BC = a \) — катети</li>
+            <li>\( CD = h \) — висота</li>
+            <li>\( AD, BD \) — шматочки гіпотенузи (проєкції)</li>
+          </ul>
         </div>
       </div>
 
-      <div id="lower" class="tab-content active">
-        <div class="day">
-          <h2>Понеділок</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Інструментальні середовища та технології
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Тієвський І.О.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Тарануха В.Ю.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us05web.zoom.us/j/7221055227?pwd=MTdmWG9oNDA0TXd0TGU2dFVSWXN0UT09"
-                    target="_blank"
-                    class="btn-link"
-                  >
-                    Zoom
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">14.05-15.40</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Мова Python для візуалізації
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">Ляшко А. В.</td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.10-20.30</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Поліною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/78261077907?pwd=1EyaRpoLRXmLB9TY14c03Ipec0JqoS.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="card yellow-theme">
+        <div class="card-header">
+          <span class="card-icon">🔑</span>
+          <h2>2. Головні Формули</h2>
         </div>
-
-        <div class="day">
-          <h2>Вівторок</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">Іноземна мова</td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Красовська І. В.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Алгоритми та структури даних
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">Закала П.А.</td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Математична статистика
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">Бездір О.О.</td>
-                <td data-label="Лінк">
-                  <a href="https://meet.google.com/nry-pvjm-iqr" target="_blank" class="btn-link"
-                    >Meet
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">16.00-16.50</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Іванною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/74561284373?pwd=btqSbLB8LRR9qsgvswiFSS7pXicWnp.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">17.00-17.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Вікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.00-19.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Ілльой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/79950004155?pwd=FgHHeKdpJHgWqbDB7tZmDpaV3kgVab.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">20.00-20.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Алісой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">21.00-21.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Славой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="content">
+          <span class="sub-heading">А. Формула висоти:</span>
+          <div class="formula-box">\( h^2 = AD \cdot BD \)</div>
+          <p style="text-align: center; color: #777; font-size: 0.9em">
+            Квадрат висоти = добуток проєкцій.
+          </p>
+          <hr />
+          <span class="sub-heading">Б. Формули катетів:</span>
+          <div class="formula-box">\( AC^2 = AB \cdot AD \)</div>
+          <div class="formula-box">\( BC^2 = AB \cdot BD \)</div>
+          <p style="text-align: center; color: #777; font-size: 0.9em">
+            Квадрат катета = гіпотенуза × його проєкція.
+          </p>
         </div>
+      </div>
 
-        <div class="day">
-          <h2>Середа</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Дослідження операцій
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Кондратенко О.О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="http://meet.google.com/stp-rrmy-uni"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet
-                  </a>
-                </td>
-              </tr>
-              <tr class="pr">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Теорія алгоритмів
-                </td>
-                <td data-label="Тип"><span class="badge">Практика</span></td>
-                <td class="teacher-cell" data-label="Викладач">Зубенко В.В.</td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Алгоритми та структури даних
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">Бобиль Б. В.</td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">14.05-15.40</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Завадський І. О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://knu-ua.zoom.us/j/89311264406?pwd=GyiSgmIhoP5gNg6rDkyw6xqn2uiUb7.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">16.00-16.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Євою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">18.00-18.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Нікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">20.00-20.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Марією</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="card green-theme">
+        <div class="card-header">
+          <span class="card-icon">🧠</span>
+          <h2>Чому це працює?</h2>
         </div>
-
-        <div class="day">
-          <h2>Четвер</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Інструментальні середовища та технології
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Omelchuk L. L.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://meet.google.com/xro-rpnw-pff"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Математична статистика
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">Розора І. В.</td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://meet.google.com/fys-kfeu-unr"
-                    target="_blank"
-                    class="btn-link"
-                    >Meet</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Бази даних та бази знань
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Завадський І. О.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://knu-ua.zoom.us/j/89311264406?pwd=GyiSgmIhoP5gNg6rDkyw6xqn2uiUb7.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">14.05-15.40</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Теорія алгоритмів
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Шкільняк С. С.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/77713518929?pwd=K01sMDZxTXpQSEJPYk1ZeHFkOEVpdz09"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">16.00-16.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Євою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">17.00-17.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Вікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">18.00-18.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Златою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/72715914681?pwd=QweeSKv99Tv5ebFwwAeDLO3xUBB9up.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.00-19.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Ілльой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/79950004155?pwd=FgHHeKdpJHgWqbDB7tZmDpaV3kgVab.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">20.00-20.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Алісой</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="content">
+          <p>Все базується на <strong>подібності трикутників</strong>.</p>
+          <p>
+            Висота ділить великий трикутник на два маленьких. Усі три трикутники
+            мають однакову форму!
+          </p>
+          <div
+            class="formula-box"
+            style="
+              background-image: linear-gradient(to bottom right, #d5f5e3, #fff);
+              border-color: var(--accent-green);
+              box-shadow: inset 0 0 10px rgba(46, 204, 113, 0.2);
+            "
+          >
+            \( \Delta ABC \sim \Delta ACD \sim \Delta CBD \)
+          </div>
+          <p>
+            <strong>Середнє пропорційне:</strong> Це число, яке стоїть
+            "посередині" в пропорції. Наприклад, \(k\) між \(m\) і \(n\), якщо
+            \( k = \sqrt{m \cdot n} \).
+          </p>
         </div>
+      </div>
 
-        <div class="day">
-          <h2>П'ятниця</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Час</th>
-                <th>Предмет</th>
-                <th>Тип</th>
-                <th>Викладач</th>
-                <th>Лінк</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">8.40-10.15</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Дослідження операцій
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Заворотинський А. В.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">10.35-12.10</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Теорія алгоритмів
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Шкільняк С. С.
-                </td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/77713518929?pwd=K01sMDZxTXpQSEJPYk1ZeHFkOEVpdz09"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom
-                  </a>
-                </td>
-              </tr>
-              <tr class="lek">
-                <td class="time-cell" data-label="Час">12.20-13.55</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Дослідження операцій
-                </td>
-                <td data-label="Тип"><span class="badge">Лекція</span></td>
-                <td class="teacher-cell" data-label="Викладач">
-                  Заворотинський А. В.
-                </td>
-                <td data-label="Лінк">
-                  <a href="" target="_blank" class="btn-link"
-                    >Ще немає посилання
-                  </a>
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">15.00-15.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Златою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/72715914681?pwd=QweeSKv99Tv5ebFwwAeDLO3xUBB9up.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">17.00-17.50</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Іванною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/74561284373?pwd=btqSbLB8LRR9qsgvswiFSS7pXicWnp.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">18.00-18.50</td>
-                <td class="subject-cell" data-label="Предмет">Урок з Нікою</td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-              <tr class="ind">
-                <td class="time-cell" data-label="Час">19.00-20.20</td>
-                <td class="subject-cell" data-label="Предмет">
-                  Урок з Поліною
-                </td>
-                <td data-label="Тип"><span class="badge">інд</span></td>
-                <td class="teacher-cell" data-label="Викладач"></td>
-                <td data-label="Лінк">
-                  <a
-                    href="https://us04web.zoom.us/j/78261077907?pwd=1EyaRpoLRXmLB9TY14c03Ipec0JqoS.1"
-                    target="_blank"
-                    class="btn-link"
-                    >Zoom</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="card purple-theme">
+        <div class="card-header">
+          <span class="card-icon">📝</span>
+          <h2>Приклад задачі</h2>
+        </div>
+        <div class="content">
+          <p>
+            <strong>Дано:</strong> Проєкції \(9\) см і \(16\) см.<br />
+            <strong>Знайти:</strong> Периметр трикутника.
+          </p>
+          <hr />
+          <div class="step-list">
+            <p>
+              <strong>1. Гіпотенуза:</strong><br />
+              \( AB = 9 + 16 = 25 \) см.
+            </p>
+            <p>
+              <strong>2. Катет \(AC\):</strong><br />
+              \( AC^2 = 25 \cdot 9 = 225 \Rightarrow AC = 15 \).
+            </p>
+            <p>
+              <strong>3. Катет \(BC\):</strong><br />
+              \( BC^2 = 25 \cdot 16 = 400 \Rightarrow BC = 20 \).
+            </p>
+            <p>
+              <strong>4. Периметр:</strong><br />
+              \( P = 25 + 15 + 20 = 60 \) см.
+            </p>
+          </div>
         </div>
       </div>
     </div>
-
-    <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const startDate = new Date(2026, 0, 26);
-    
-    function updateSchedule() {
-      const now = new Date();
-      const diffTime = now - startDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      const adjustedDays = diffDays < 0 ? 0 : diffDays;
-      const weeksPassed = Math.floor(adjustedDays / 7);
-
-      const statusEl = document.getElementById("weekStatus");
-      let activeTabId = "lower";
-
-      if (weeksPassed % 2 === 0) {
-        activeTabId = "upper";
-        statusEl.innerHTML = "Зараз активний: <span>Верхній тиждень</span>";
-      } else {
-        activeTabId = "lower";
-        statusEl.innerHTML = "Зараз активний: <span>Нижній тиждень</span>";
-      }
-
-      openTab(activeTabId);
-      highlightLessons(activeTabId, now);
-    }
-
-    function highlightLessons(tabId, now) {
-      const dayMap = {
-        "Понеділок": 1,
-        "Вівторок": 2,
-        "Середа": 3,
-        "Четвер": 4,
-        "П'ятниця": 5,
-        "Субота": 6,
-        "Неділя": 0
-      };
-
-      const currentDayIndex = now.getDay(); 
-      const container = document.getElementById(tabId);
-      const days = container.getElementsByClassName("day");
-      
-      let nextFound = false;
-
-      for (let day of days) {
-        const title = day.querySelector("h2").innerText.trim();
-        const dayIndex = dayMap[title];
-
-        day.classList.remove("day-passed");
-
-        if (dayIndex < currentDayIndex && dayIndex !== 0) {
-          day.classList.add("day-passed");
-          const rows = day.querySelectorAll("tbody tr");
-          rows.forEach(row => {
-            row.classList.add("passed");
-            row.classList.remove("current", "next");
-          });
-          continue;
-        }
-
-        if (dayIndex > currentDayIndex) {
-          const rows = day.querySelectorAll("tbody tr");
-          rows.forEach(row => {
-            row.classList.remove("passed", "current", "next");
-            if (!nextFound) {
-               row.classList.add("next");
-               nextFound = true;
-            }
-          });
-          continue;
-        }
-
-        if (dayIndex === currentDayIndex) {
-          const rows = day.querySelectorAll("tbody tr");
-          
-          rows.forEach(row => {
-            row.classList.remove("passed", "current", "next");
-            
-            const timeCell = row.querySelector(".time-cell");
-            if (!timeCell) return;
-
-            const timeText = timeCell.innerText.trim(); 
-            const [startStr, endStr] = timeText.split("-");
-            
-            const startTime = parseTime(startStr, now);
-            const endTime = parseTime(endStr, now);
-
-            if (now > endTime) {
-              row.classList.add("passed");
-            } else if (now >= startTime && now <= endTime) {
-              row.classList.add("current");
-              nextFound = true;
-            } else {
-              if (!nextFound) {
-                row.classList.add("next");
-                nextFound = true;
-              }
-            }
-          });
-        }
-      }
-    }
-
-    function parseTime(timeStr, dateRef) {
-      const [hours, minutes] = timeStr.trim().split(".").map(Number);
-      const newDate = new Date(dateRef);
-      newDate.setHours(hours, minutes, 0, 0);
-      return newDate;
-    }
-
-    function openTab(tabName) {
-      const tabContent = document.getElementsByClassName("tab-content");
-      for (let i = 0; i < tabContent.length; i++) {
-        tabContent[i].classList.remove("active");
-      }
-
-      const tabBtns = document.getElementsByClassName("tab-btn");
-      for (let i = 0; i < tabBtns.length; i++) {
-        tabBtns[i].classList.remove("active");
-      }
-
-      document.getElementById(tabName).classList.add("active");
-      
-      const btnId = tabName === "upper" ? "btn-upper" : "btn-lower";
-      document.getElementById(btnId).classList.add("active");
-    }
-
-    updateSchedule();
-    setInterval(updateSchedule, 60000);
-  });
-</script>
   </body>
 </html>
