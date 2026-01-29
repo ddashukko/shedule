@@ -197,15 +197,6 @@ window.scheduleData = {
         linkText: "Zoom",
       },
       {
-        time: "14.05-15.40",
-        subject: "Теорія алгоритмів",
-        type: "lek",
-        typeLabel: "Лекція",
-        teacher: "Шкільняк С. С.",
-        link: "https://us04web.zoom.us/j/77713518929?pwd=K01sMDZxTXpQSEJPYk1ZeHFkOEVpdz09",
-        linkText: "Zoom",
-      },
-      {
         time: "16.00-16.50",
         subject: "Урок з Євою",
         type: "ind",
@@ -530,15 +521,6 @@ window.scheduleData = {
         typeLabel: "Лекція",
         teacher: "Завадський І. О.",
         link: "https://knu-ua.zoom.us/j/89311264406?pwd=GyiSgmIhoP5gNg6rDkyw6xqn2uiUb7.1",
-        linkText: "Zoom",
-      },
-      {
-        time: "14.05-15.40",
-        subject: "Теорія алгоритмів",
-        type: "lek",
-        typeLabel: "Лекція",
-        teacher: "Шкільняк С. С.",
-        link: "https://us04web.zoom.us/j/77713518929?pwd=K01sMDZxTXpQSEJPYk1ZeHFkOEVpdz09",
         linkText: "Zoom",
       },
       {
