@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasha's Self-Care</title>
+    <style>
+        :root {
+            --primary: #ff9a9e;
+            --bg: #fad0c4;
+            --card: #ffffff;
+            --text: #2d3436;
+            --done: #00b894;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, var(--bg) 0%, #ffd1ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: var(--text);
+        }
+
+        .container {
+            background: var(--card);
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .date-display {
+            text-align: center;
+            color: #888;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .task-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .task-item.completed span {
+            text-decoration: line-through;
+            color: #bbb;
+        }
+
+        .hair-tracker {
+            background: #fff0f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ffcccc;
+        }
+
+        .hair-status {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .btn-hair {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .btn-hair:disabled {
+            background: #ccc;
+        }
+
+        .spa-day {
+            background: linear-gradient(45deg, #a18cd1 0%, #fbc2eb 100%);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .spa-day .task-item {
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .spa-day .task-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>My Self-Care</h1>
+    <div class="date-display" id="currentDate"></div>
+
+    <div class="hair-tracker">
+        <div class="hair-status" id="hairStatus">Перевірка стану волосся...</div>
+        <button class="btn-hair" id="hairBtn" onclick="washHair()">Я помила голову!</button>
+    </div>
+
+    <div class="section">
+        <div class="section-title">☀️ Ранок</div>
+        <div id="morningList"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🌙 Вечір</div>
+        <div id="eveningList"></div>
+    </div>
+
+    <div class="section" id="spaSection" style="display: none;">
+        <div class="section-title">✨ СПА-ДЕНЬ (Неділя)</div>
+        <div class="spa-day" id="spaList"></div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'dasha_selfcare_v1';
+    
+    const tasks = {
+        morning: [
+            "Душ 🚿", 
+            "Чищення зубів 🪥", 
+            "Вмивання (Пінка+Тонік+Крем) 🧴"
+        ],
+        evening: [
+            "Чищення зубів 🪥", 
+            "Вмивання (Пінка+Тонік+Крем) 🧴", 
+            "Крем для рук + Олійка 💅"
+        ],
+        spa: [
+            "Маска для волосся 💆‍♀️",
+            "Маска для обличчя 🎭",
+            "Гоління ніг 🪒",
+            "Манікюр ✂️"
+        ]
+    };
+
+    function loadState() {
+        const defaultState = {
+            date: new Date().toDateString(),
+            lastHairWash: new Date().toDateString(),
+            completed: []
+        };
+        
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) return defaultState;
+        
+        const state = JSON.parse(stored);
+        
+        if (state.date !== new Date().toDateString()) {
+            state.date = new Date().toDateString();
+            state.completed = []; 
+            saveState(state);
+        }
+        return state;
+    }
+
+    function saveState(state) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        render();
+    }
+
+    function toggleTask(taskName) {
+        const state = loadState();
+        const index = state.completed.indexOf(taskName);
+        
+        if (index > -1) {
+            state.completed.splice(index, 1);
+        } else {
+            state.completed.push(taskName);
+        }
+        saveState(state);
+    }
+
+    function washHair() {
+        const state = loadState();
+        state.lastHairWash = new Date().toDateString();
+        saveState(state);
+    }
+
+    function renderList(containerId, listItems, completedItems) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        
+        listItems.forEach(item => {
+            const isDone = completedItems.includes(item);
+            const div = document.createElement('div');
+            div.className = `task-item ${isDone ? 'completed' : ''}`;
+            div.onclick = () => toggleTask(item);
+            
+            div.innerHTML = `
+                <input type="checkbox" ${isDone ? 'checked' : ''}>
+                <span>${item}</span>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function checkHairStatus(lastWashStr) {
+        const lastWash = new Date(lastWashStr);
+        const today = new Date();
+        const diffTime = Math.abs(today - lastWash);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        
+        const statusDiv = document.getElementById('hairStatus');
+        const btn = document.getElementById('hairBtn');
+        
+        if (diffDays <= 0) {
+            statusDiv.innerHTML = "Волосся чисте ✨ (Помито сьогодні)";
+            statusDiv.style.color = "green";
+            btn.disabled = true;
+        } else if (diffDays === 1) {
+            statusDiv.innerHTML = "Волосся ок (Помито вчора)";
+            statusDiv.style.color = "#555";
+            btn.disabled = false;
+        } else {
+            statusDiv.innerHTML = `⚠️ Час мити голову! (Минуло днів: ${diffDays})`;
+            statusDiv.style.color = "#d63031";
+            statusDiv.style.fontWeight = "bold";
+            btn.disabled = false;
+        }
+    }
+
+    function render() {
+        const state = loadState();
+        const today = new Date();
+        
+        document.getElementById('currentDate').innerText = today.toLocaleDateString('uk-UA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        renderList('morningList', tasks.morning, state.completed);
+        renderList('eveningList', tasks.evening, state.completed);
+
+        if (today.getDay() === 0) {
+            document.getElementById('spaSection').style.display = 'block';
+            renderList('spaList', tasks.spa, state.completed);
+        } else {
+            document.getElementById('spaSection').style.display = 'none';
+        }
+
+        checkHairStatus(state.lastHairWash);
+    }
+
+    render();
+</script>
+
+</body>
+</html>
