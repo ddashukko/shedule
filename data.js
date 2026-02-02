@@ -7,8 +7,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Тієвський І.О.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "classroom",
+        linkText: "https://classroom.google.com/c/ODQwOTkyNjAxNTM3",
       },
       {
         time: "12.20-13.55",
@@ -316,8 +316,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Тієвський І.О.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "classroom",
+        linkText: "https://classroom.google.com/c/ODQwOTkyNjAxNTM3",
       },
       {
         time: "12.20-13.55",
@@ -334,8 +334,8 @@ window.scheduleData = {
         type: "pr",
         typeLabel: "Практика",
         teacher: "Ляшко А. В.",
-        link: "",
-        linkText: "Ще немає посилання",
+        link: "classroom",
+        linkText: "https://classroom.google.com/c/ODQxMTY3MTE3MDM5",
       },
       {
         time: "19.05-20.25",
