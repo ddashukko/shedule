@@ -1,13 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- НАЛАШТУВАННЯ ---
-  // Дата початку семестру (для визначення Верхнього/Нижнього тижня)
   const startDate = new Date(2026, 0, 26);
-
   const themeCheckbox = document.getElementById("checkbox");
   const findMeBtn = document.getElementById("findMeBtn");
-
-  // --- 1. ЛОГІКА ТЕМИ (DARK MODE) ---
   const savedTheme = localStorage.getItem("theme");
+
   if (savedTheme === "dark") {
     document.documentElement.setAttribute("data-theme", "dark");
     themeCheckbox.checked = true;
@@ -23,29 +19,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // --- 2. ЗАПУСК ДОДАТКУ ---
   if (window.scheduleData) {
     renderSchedule(window.scheduleData);
     initTabs();
-
-    // Запускаємо логіку відразу при завантаженні
     updateSchedule(true);
     updateTimeTracker();
-
-    // Оновлюємо таймер щосекунди (для плавної смужки)
     setInterval(updateTimeTracker, 1000);
-
-    // Оновлюємо таблицю (підсвітку рядків) раз на хвилину
     setInterval(() => updateSchedule(false), 60000);
   } else {
-    console.error(
-      "Помилка: window.scheduleData не знайдено. Перевірте файл data.js",
-    );
+    console.error("Помилка: window.scheduleData не знайдено");
     const status = document.getElementById("weekStatus");
     if (status) status.innerText = "Помилка даних";
   }
 
-  // --- 3. ЛОГІКА ТАЙМЕРА І ПРОГРЕС-БАРУ (ГОЛОВНА ФІЧА) ---
   function updateTimeTracker() {
     const trackerContainer = document.getElementById("timeTracker");
     const trackerText = document.getElementById("tracker-text");
@@ -53,13 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const progressFill = document.getElementById("progress-fill");
 
     const now = new Date();
-    // Переводимо поточний час у хвилини від початку доби (0..1439)
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
     const weekType = getCurrentWeekType();
     const dayName = getDayName(now.getDay());
 
-    // Якщо вихідний або даних немає - ховаємо блок
     if (
       !window.scheduleData[weekType] ||
       !window.scheduleData[weekType][dayName]
@@ -70,35 +53,26 @@ document.addEventListener("DOMContentLoaded", function () {
     trackerContainer.style.display = "block";
 
     const todaysLessons = window.scheduleData[weekType][dayName];
-
     let activeLesson = null;
     let nextLesson = null;
-
-    // Змінна, щоб знати, коли закінчилась ПОПЕРЕДНЯ пара.
-    // Якщо пар ще не було, це початок доби (0 хвилин).
     let prevLessonEnd = 0;
 
     for (let i = 0; i < todaysLessons.length; i++) {
       const lesson = todaysLessons[i];
       const { start, end, startStr } = parseTimeRange(lesson.time);
 
-      // Чи ми зараз всередині цієї пари?
       if (currentMinutes >= start && currentMinutes < end) {
         activeLesson = { ...lesson, start, end };
         break;
       }
 
-      // Чи ця пара ще попереду?
       if (currentMinutes < start) {
         nextLesson = { ...lesson, start, end, startStr };
-        break; // Знайшли найближчу наступну, виходимо
+        break;
       }
-
-      // Якщо ми тут, значить ця пара вже минула. Запам'ятовуємо її кінець.
       prevLessonEnd = end;
     }
 
-    // --- ВАРІАНТ А: ЗАРАЗ ЙДЕ УРОК ---
     if (activeLesson) {
       const totalDuration = activeLesson.end - activeLesson.start;
       const elapsed = currentMinutes - activeLesson.start;
@@ -106,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const remaining = activeLesson.end - currentMinutes;
 
       progressWrapper.style.display = "block";
-      progressFill.classList.remove("break-mode"); // Зелений колір
+      progressFill.classList.remove("break-mode");
       progressFill.style.width = `${percent}%`;
 
       trackerText.innerHTML = `
@@ -114,26 +88,19 @@ document.addEventListener("DOMContentLoaded", function () {
         <div style="font-weight: 700; font-size: 1.1em;">${activeLesson.subject}</div>
         <div style="font-size: 0.85em; margin-top: 4px;">До кінця: ${formatMinutes(remaining)}</div>
       `;
-
-      // --- ВАРІАНТ Б: ЗАРАЗ ПЕРЕРВА (або ранок до пар) ---
     } else if (nextLesson) {
-      // Перерва триває від кінця минулої пари до початку наступної
       const breakStart = prevLessonEnd;
       const breakEnd = nextLesson.start;
-
       const totalBreakDuration = breakEnd - breakStart;
       const elapsedBreak = currentMinutes - breakStart;
-
-      // Захист від ділення на нуль (рідкісний випадок)
       const percent =
         totalBreakDuration > 0 ? (elapsedBreak / totalBreakDuration) * 100 : 0;
       const remainingBreak = breakEnd - currentMinutes;
 
       progressWrapper.style.display = "block";
-      progressFill.classList.add("break-mode"); // Вмикаємо помаранчевий колір
+      progressFill.classList.add("break-mode");
       progressFill.style.width = `${percent}%`;
 
-      // Якщо це ранок (prevLessonEnd === 0), пишемо "Початок", інакше "Перерва"
       const title =
         prevLessonEnd === 0 ? "🌙 До початку навчання:" : "☕ Перерва";
 
@@ -146,17 +113,12 @@ document.addEventListener("DOMContentLoaded", function () {
             Залишилось часу: ${formatMinutes(remainingBreak)}
         </div>
       `;
-
-      // --- ВАРІАНТ В: ВСІ ПАРИ ЗАКІНЧИЛИСЬ ---
     } else {
       progressWrapper.style.display = "none";
       trackerText.innerHTML = "На сьогодні все! Гарного відпочинку 🌙";
     }
   }
 
-  // --- 4. ДОПОМІЖНІ ФУНКЦІЇ ---
-
-  // Перетворює "13.55-15.15" у зручний об'єкт
   function parseTimeRange(timeStr) {
     const [startRaw, endRaw] = timeStr.split("-");
     return {
@@ -166,18 +128,25 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // "13.55" -> хвилин від початку доби
   function timeToMinutes(t) {
     const parts = t.replace(".", ":").split(":").map(Number);
     return parts[0] * 60 + parts[1];
   }
 
-  // Форматує хвилини у "X год Y хв"
   function formatMinutes(mins) {
     const h = Math.floor(mins / 60);
     const m = mins % 60;
     if (h > 0) return `${h} год ${m} хв`;
     return `${m} хв`;
+  }
+
+  function formatDurationShort(mins) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    if (h > 0) {
+      return `${h}г ${m}хв`;
+    }
+    return `${m}хв`;
   }
 
   function getDayName(dayIndex) {
@@ -197,13 +166,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const now = new Date();
     const diffTime = now - startDate;
     const daysPassed = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    // Захист від від'ємних днів, якщо дата старту в майбутньому
     const adjustedDays = daysPassed < 0 ? 0 : daysPassed;
     const weeksPassed = Math.floor(adjustedDays / 7);
     return weeksPassed % 2 === 0 ? "upper" : "lower";
   }
 
-  // --- 5. РЕНДЕРИНГ ТАБЛИЦІ ---
   function renderSchedule(data) {
     if (data.upper) renderWeek("upper", data.upper);
     if (data.lower) renderWeek("lower", data.lower);
@@ -213,6 +180,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = "";
+
+    const DAY_START = 8 * 60;
+    const DAY_END = 21 * 60;
+
     for (const [dayName, lessons] of Object.entries(weekData)) {
       const dayDiv = document.createElement("div");
       dayDiv.className = "day";
@@ -224,7 +195,28 @@ document.addEventListener("DOMContentLoaded", function () {
       table.innerHTML = `<thead><tr><th>Час</th><th>Предмет</th><th>Тип</th><th>Викладач</th><th>Лінк</th></tr></thead><tbody></tbody>`;
       const tbody = table.querySelector("tbody");
 
-      lessons.forEach((lesson) => {
+      const sortedLessons = [...lessons].sort((a, b) => {
+        return parseTimeRange(a.time).start - parseTimeRange(b.time).start;
+      });
+
+      if (sortedLessons.length > 0) {
+        const firstLessonStart = parseTimeRange(sortedLessons[0].time).start;
+        if (firstLessonStart - DAY_START > 30) {
+          tbody.appendChild(createFreeTimeRow(DAY_START, firstLessonStart));
+        }
+      }
+
+      let previousEnd = null;
+
+      sortedLessons.forEach((lesson) => {
+        const { start, end } = parseTimeRange(lesson.time);
+
+        if (previousEnd !== null) {
+          if (start - previousEnd > 30) {
+            tbody.appendChild(createFreeTimeRow(previousEnd, start));
+          }
+        }
+
         const tr = document.createElement("tr");
         tr.className = lesson.type;
         tr.innerHTML = `
@@ -235,13 +227,35 @@ document.addEventListener("DOMContentLoaded", function () {
             <td data-label="Лінк"><a href="${lesson.link}" target="_blank" class="btn-link">${lesson.linkText}</a></td>
         `;
         tbody.appendChild(tr);
+
+        previousEnd = end;
       });
+
+      if (previousEnd !== null && DAY_END - previousEnd > 30) {
+        tbody.appendChild(createFreeTimeRow(previousEnd, DAY_END));
+      }
+
       dayDiv.appendChild(table);
       container.appendChild(dayDiv);
     }
   }
 
-  // --- 6. НАВІГАЦІЯ І ТАБИ ---
+  function createFreeTimeRow(startMin, endMin) {
+    const durationMin = endMin - startMin;
+    const tr = document.createElement("tr");
+    tr.className = "free-time-row";
+
+    tr.innerHTML = `
+      <td colspan="5">
+        <div class="free-time-card">
+          <span class="free-time-icon">☕</span> 
+          <span>Вільний час: ${formatDurationShort(durationMin)}</span>
+        </div>
+      </td>
+    `;
+    return tr;
+  }
+
   function initTabs() {
     const tabBtns = document.getElementsByClassName("tab-btn");
     Array.from(tabBtns).forEach((btn) => {
@@ -264,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btn) btn.classList.add("active");
   }
 
-  // Оновлення статусів (Passed, Current, Next) у таблиці
   function updateSchedule(forceSwitchTab) {
     const weekType = getCurrentWeekType();
     const statusEl = document.getElementById("weekStatus");
@@ -275,7 +288,6 @@ document.addEventListener("DOMContentLoaded", function () {
     highlightLessons(weekType, new Date());
   }
 
-  // Кнопка "Де я?"
   findMeBtn.addEventListener("click", () => {
     updateSchedule(true);
     const activeRow =
@@ -297,7 +309,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Логіка підсвітки рядків
   function highlightLessons(tabId, now) {
     const dayMap = {
       Понеділок: 1,
@@ -319,26 +330,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
       day.classList.remove("day-passed");
 
-      // Минулі дні
       if (dIdx < currentDayIndex && dIdx !== 0) {
         day.classList.add("day-passed");
         day.querySelectorAll("tr").forEach((r) => {
-          r.classList.add("passed");
-          r.classList.remove("current", "next");
+          if (!r.classList.contains("free-time-row")) {
+            r.classList.add("passed");
+            r.classList.remove("current", "next");
+          }
         });
         continue;
       }
-      // Майбутні дні
+
       if (dIdx > currentDayIndex) {
         day
           .querySelectorAll("tr")
           .forEach((r) => r.classList.remove("passed", "current", "next"));
         continue;
       }
-      // Поточний день
+
       if (dIdx === currentDayIndex) {
         let nextFound = false;
         day.querySelectorAll("tbody tr").forEach((row) => {
+          if (row.classList.contains("free-time-row")) return;
+
           row.classList.remove("passed", "current", "next");
           const timeText = row.querySelector(".time-cell").innerText;
           const { start, end } = parseTimeRange(timeText);

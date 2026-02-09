@@ -578,3 +578,72 @@ tr.next td:last-child {
     var(--accent-orange-text)
   );
 }
+
+/* --- СТИЛІ ДЛЯ ВІЛЬНОГО ЧАСУ (GAP) --- */
+
+/* Рядок таблиці для вільного часу */
+tr.free-time-row {
+  pointer-events: none; /* Щоб не підсвічувався при наведенні */
+  background: transparent !important; /* Прибираємо фон рядка */
+  border: none !important;
+}
+
+tr.free-time-row td {
+  border-bottom: none !important; /* Прибираємо лінію таблиці */
+  padding: 8px 0; /* Відступи зверху і знизу */
+  display: table-cell;
+}
+
+/* Сам контейнер (вигляд кнопки з пунктиром) */
+.free-time-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  /* Стиль рамки і фону */
+  border: 2px dashed var(--accent-blue); /* Синій пунктир */
+  border-radius: 12px; /* Заокруглення */
+  background-color: rgba(59, 130, 246, 0.05); /* Ледь помітний синій фон */
+
+  padding: 12px;
+  margin: 0 4px; /* Невеликий відступ по боках */
+
+  /* Текст */
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Іконка кави трохи прозоріша */
+.free-time-icon {
+  font-size: 1.1em;
+}
+
+/* Адаптація під темну тему (трохи яскравіший фон) */
+[data-theme="dark"] .free-time-card {
+  background-color: rgba(59, 130, 246, 0.15);
+  border-color: #4b5563; /* Або залиш var(--accent-blue) якщо хочеш синій */
+  color: #e5e7eb;
+}
+
+/* Мобільна адаптація */
+@media (max-width: 768px) {
+  tr.free-time-row {
+    display: block;
+    margin-bottom: 15px;
+    border: none;
+    padding: 0;
+  }
+
+  tr.free-time-row td {
+    display: block;
+    width: 100%;
+    padding: 0;
+  }
+
+  .free-time-card {
+    width: 100%;
+    box-sizing: border-box; /* Щоб padding не ламав ширину */
+  }
+}
