@@ -19,6 +19,15 @@ window.scheduleData = {
         link: "https://us05web.zoom.us/j/7221055227?pwd=MTdmWG9oNDA0TXd0TGU2dFVSWXN0UT09",
         linkText: "Zoom",
       },
+      {
+        time: "22.00-23.30",
+        subject: "English",
+        type: "інд",
+        typeLabel: "Реп",
+        teacher: "Колош А.С.",
+        link: "-",
+        linkText: "кожен раз нове",
+      },
     ],
     Вівторок: [
       {
@@ -241,6 +250,15 @@ window.scheduleData = {
         link: "https://us04web.zoom.us/j/9962482824?pwd=23Wry7aRgv7nbluhweOFcpKrREDwgw.1",
         linkText: "Zoom",
       },
+      {
+        time: "22.00-23.30",
+        subject: "English",
+        type: "інд",
+        typeLabel: "Реп",
+        teacher: "Колош А.С.",
+        link: "-",
+        linkText: "кожен раз нове",
+      },
     ],
     "П'ятниця": [
       {
@@ -336,6 +354,15 @@ window.scheduleData = {
         teacher: "Ляшко А. В.",
         link: "https://classroom.google.com/c/ODQxMTY3MTE3MDM5",
         linkText: "classroom",
+      },
+      {
+        time: "22.00-23.30",
+        subject: "English",
+        type: "інд",
+        typeLabel: "Реп",
+        teacher: "Колош А.С.",
+        link: "-",
+        linkText: "кожен раз нове",
       },
     ],
     Вівторок: [
@@ -493,6 +520,15 @@ window.scheduleData = {
         teacher: "",
         link: "https://us04web.zoom.us/j/79950004155?pwd=FgHHeKdpJHgWqbDB7tZmDpaV3kgVab.1",
         linkText: "Zoom",
+      },
+      {
+        time: "22.00-23.30",
+        subject: "English",
+        type: "інд",
+        typeLabel: "Реп",
+        teacher: "Колош А.С.",
+        link: "-",
+        linkText: "кожен раз нове",
       },
     ],
     Четвер: [
