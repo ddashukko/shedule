@@ -441,15 +441,6 @@ window.scheduleData = {
         linkText: "Zoom",
       },
       {
-        time: "21.00-21.50",
-        subject: "Урок з Ілльой",
-        type: "ind",
-        typeLabel: "інд",
-        teacher: "",
-        link: "https://us04web.zoom.us/j/79950004155?pwd=FgHHeKdpJHgWqbDB7tZmDpaV3kgVab.1",
-        linkText: "Zoom",
-      },
-      {
         time: "22.00-23.30",
         subject: "English",
         type: "інд",
