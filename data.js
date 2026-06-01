@@ -8,7 +8,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/75195106340?pwd=4wfzWB28igMBPQTVdaeTYq2GyCvXdf.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "11.00-11.50",
@@ -17,7 +17,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73365668510?pwd=Q68tpiIX7u3QtjFkyfLPGxIbXVacnX.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "12.00-12.50",
@@ -26,7 +26,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73754990250?pwd=MIeDxzctcaiPf9YNVQBFRwTnTybj2A.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "15.00-15.50",
@@ -64,7 +64,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/75195106340?pwd=4wfzWB28igMBPQTVdaeTYq2GyCvXdf.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "11.00-11.50",
@@ -73,7 +73,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73365668510?pwd=Q68tpiIX7u3QtjFkyfLPGxIbXVacnX.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "12.00-12.50",
@@ -82,7 +82,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73754990250?pwd=MIeDxzctcaiPf9YNVQBFRwTnTybj2A.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "15.00-15.50",
@@ -126,7 +126,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/75195106340?pwd=4wfzWB28igMBPQTVdaeTYq2GyCvXdf.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "11.00-11.50",
@@ -135,7 +135,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73365668510?pwd=Q68tpiIX7u3QtjFkyfLPGxIbXVacnX.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "12.00-12.50",
@@ -144,7 +144,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73754990250?pwd=MIeDxzctcaiPf9YNVQBFRwTnTybj2A.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "15.00-15.50",
@@ -182,7 +182,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/75195106340?pwd=4wfzWB28igMBPQTVdaeTYq2GyCvXdf.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "11.00-11.50",
@@ -191,7 +191,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73365668510?pwd=Q68tpiIX7u3QtjFkyfLPGxIbXVacnX.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "12.00-12.50",
@@ -200,7 +200,7 @@ window.scheduleData = {
         typeLabel: "інд",
         teacher: "",
         link: "https://us04web.zoom.us/j/73754990250?pwd=MIeDxzctcaiPf9YNVQBFRwTnTybj2A.1",
-        linkText: "",
+        linkText: "Zoom",
       },
       {
         time: "15.00-15.50",
